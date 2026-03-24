@@ -1,0 +1,112 @@
+{
+    "title": "1-2-3-test",
+    "uid": "1-2-3-002",
+    "rootUri": "/mnt/monteringspunkt/TEST/002",
+    "description": "<p>Demosystem</p>",
+    "privilegeGroups": [
+        "an-AD-group"
+    ],
+    "styleHrefs": [],
+    "groups": [],
+    "forms": [
+        {
+            "title": "demosystem",
+            "uid": "1-2-3-002-2",
+            "description": "<p>demosystem</p>",
+            "dialog": {
+                "title": "demotyp",
+                "width": 1024,
+                "height": 768,
+                "printButtonLabel": "Skriv ut",
+                "archiveObjectOnly": true
+            },
+            "database": {
+                "connection": "Arkiv_test",
+                "statement": 
+		"\n\t\tBEGIN\n                    DECLARE @v1 NVARCHAR(200);\n                    DECLARE @v2 NVARCHAR(200);\n\n                    SET @v1 = ?;\n                    SET @v2 = ?;\n\n                SELECT\n                    [TestIndex].[PERSONNUMMER],\n                    [TestIndex].[DATUM],\n                    [TestIndex].[uri]\n                FROM\n                    [dbo].[TestIndex]\n                WHERE\n                    (@v1 = '' OR [TestIndex].[PERSONNUMMER] LIKE '%'+@v1+'%' )\n                    AND (@v2 = '' OR [TestIndex].[DATUM] LIKE '%'+@v2+'%' )\n                ORDER BY {0}\n                OFFSET (({1} - 1) * {2}) ROWS\n                FETCH NEXT {2} ROWS ONLY\n                OPTION(RECOMPILE);\n            END",
+                "countStatement": "\n                BEGIN\n                    DECLARE @v1 NVARCHAR(200);\n                    DECLARE @v2 NVARCHAR(200);\n\n                    SET @v1 = ?;\n                    SET @v2 = ?;\n\n                SELECT\n                    COUNT(*)\n                FROM\n                    [dbo].[TestIndex]\n                WHERE\n                    (@v1 = '' OR [TestIndex].[PERSONNUMMER] LIKE '%'+@v1+'%' )\n                    AND (@v2 = '' OR [TestIndex].[DATUM] LIKE '%'+@v2+'%' )\n                OPTION(RECOMPILE);\n            END\n        ",
+                "bindings": [
+                    0,
+                    1
+                ],
+                "paging": {
+                    "pageSize": 20,
+                    "infoFormat": "Resultat {0}-{1} av {2}"
+                },
+                "statementFormatData": [
+                    [
+                        {
+                            "type": "orderBy",
+                            "urlencode": false
+                        }
+                    ],
+                    [
+                        {
+                            "type": "pageNumber",
+                            "urlencode": false
+                        }
+                    ],
+                    [
+                        {
+                            "type": "pageSize",
+                            "urlencode": false
+                        }
+                    ]
+                ]
+            },
+            "queryColumns": [
+                {
+                    "title": "person: ",
+                    "uid": "qc-person",
+                    "type": "text"
+                },
+                {
+                    "title": "datum: ",
+                    "uid": "qc-datum",
+                    "type": "date"
+                }
+            ],
+            "resultColumns": [
+		{
+                    "title": "person: ",
+                    "uid": "rc-person",
+                    "orderByOption": 0,
+                    "orderByOptionAlt": 1,
+		    "href" : 2
+                },
+                {
+                    "title": "datum: ",
+                    "uid": "rc-datum",
+                    "orderByOption": 2,
+                    "orderByOptionAlt": 3
+                },
+		{
+		    "title": "uri"
+		}
+            ],
+            "orderBy": {
+                "label": "Sortera på: ",
+                "defaultOption": 0,
+                "hidden": true,
+                "options": [
+                    {
+                        "label": "person: stigande",
+                        "value": "[TestIndex].[PERSONNUMMER] ASC"
+                    },
+                    {
+                        "label": "person: fallande",
+                        "value": "[TestIndex].[PERSONNUMMER] DESC"
+                    },
+                    {
+                        "label": "datum: stigande",
+                        "value": "CONVERT(NVARCHAR(10),[TestIndex].[DATUM],121) ASC"
+                    },
+                    {
+                        "label": "datum: fallande",
+                        "value": "CONVERT(NVARCHAR(10),[TestIndex].[DATUM],121) DESC"
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,9 @@
+export class ResultColumn {
+    uid?: string;
+    title: string | undefined;
+    orderbyOption?: number;
+    orderbyOptionAlt?: number;
+    href?: number;
+    hrefColumn?: ResultColumn;
+    dbName: string = '';
+}

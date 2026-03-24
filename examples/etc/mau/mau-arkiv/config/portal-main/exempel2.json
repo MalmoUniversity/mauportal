@@ -1,0 +1,16 @@
+{
+	"title": "Arkivindelning 2",
+	"uid": "indelning2",
+	"privilegeGroups": [ "an-AD-group", "an-anotherAD-group" ],
+	"description": '''
+	<h2>Underliggande_nomenklatur</h2>
+    <p>Varje underliggande nomenklatur indelas i något annat.</p>
+    ''',
+    "forms": [],
+    "groups": [  {
+             "title": "Underliggande_nomenklatur",
+             "cssClass": "rubrik-1",
+             "unselectable": true
+        }
+	]
+}

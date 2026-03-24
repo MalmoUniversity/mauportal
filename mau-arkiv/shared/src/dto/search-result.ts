@@ -1,0 +1,7 @@
+
+export interface SearchResult {
+  rows: any[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+}

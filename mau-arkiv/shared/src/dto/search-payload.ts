@@ -1,0 +1,7 @@
+export interface SearchPayload {
+    formId: string;
+    params: { [key: string]: any };
+    orderBy?: string;
+    page?: number;
+    pageSize?: number;
+}

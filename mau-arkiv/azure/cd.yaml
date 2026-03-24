@@ -1,0 +1,55 @@
+trigger:
+- none
+
+parameters:
+- name: environment
+  displayName: 'Target Environment'
+  type: string
+  default: 'test'
+  values:
+  - test
+  - prod
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  jobs:
+  - job: BuildJob
+    steps:
+    - task: UseNode@1
+      inputs:
+        version: '22.x'
+    - script: npm run package
+      displayName: 'Build package'
+    - publish: dist
+      artifact: dist
+
+- stage: Deploy
+  jobs:
+  - deployment:
+    displayName: "Deploy to ${{ parameters.environment }}"
+    environment:
+      name: 'mau-${{ parameters.environment }}'
+      resourceType: 'virtualMachine' 
+      tags: 'app-server'
+
+    strategy:
+      runOnce:
+       deploy:
+        steps:
+        - script: rm -rf $(Pipeline.Workspace)/dist
+          displayName: 'Clean artifact directory'
+        - download: current
+          artifact: dist
+        - script: pm2 stop mau-arkiv || true
+          displayName: 'Stop pm2 process'
+        - script: rm -rf /opt/mau/mau-arkiv/*
+          displayName: 'Clean target directory'
+        - script: cp -r $(Pipeline.Workspace)/dist/* /opt/mau/mau-arkiv/
+          displayName: 'Copy artifact to target'
+        - script: cp /home/mau-arkiv/config/local.json /opt/mau/mau-arkiv/config/local.json
+          displayName: 'Copy local config'
+        - script: pm2 restart mau-arkiv || pm2 start /opt/mau/mau-arkiv/app.js --name mau-arkiv
+          displayName: 'Start pm2 process'

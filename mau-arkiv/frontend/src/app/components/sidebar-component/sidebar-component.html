@@ -1,0 +1,12 @@
+<div class="main">
+    <div class="title">
+      <span *ngIf="hasParent()" (click)="showMenu(parentUid)" ><mat-icon fontIcon="arrow_back"></mat-icon></span>{{title}}</div>
+    <ng-container *ngIf="items.length > 0">
+      <div *ngFor="let item of items" class="item" [class.disabled]="!item.permitted && item.type !== 'divider'">
+        <span *ngIf="item.type === 'divider'" class="divider">{{item.title}}</span>
+        <a *ngIf="item.type !== 'divider'" 
+           (click)="item.permitted ? showMenu(item.uid) : null"
+           [class.disabled-link]="!item.permitted">{{ item.title }}</a>
+      </div>
+    </ng-container>
+</div>

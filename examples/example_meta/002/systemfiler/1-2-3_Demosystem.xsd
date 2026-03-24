@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.mau.se/e-arkiv" xmlns="http://www.mau.se/e-arkiv" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" >
+	<xs:import namespace="http://www.w3.org/1999/xlink" schemaLocation="http://www.w3.org/1999/xlink.xsd" />
+	<xs:element name="root">
+  	<xs:complexType>
+          	<xs:sequence>
+				<xs:element name="file_binary">
+					<xs:complexType>
+                                  	<xs:attribute ref="xlink:href" use="optional"/>
+                                          <xs:attribute ref="xlink:title" use="optional"/>
+                                          <xs:attribute name="Size" type="xs:integer" use="optional"/>
+                                          <xs:attribute name="sha256" type="xs:string" use="optional"/>
+                                  </xs:complexType>
+                          </xs:element>
+                  </xs:sequence>
+		<xs:attribute name="bilaga" type="xs:string" use="optional"/>
+		<xs:attribute name="PERSONNUMMER" type="xs:string" use="optional"/>
+		<xs:attribute name="DATUM" type="xs:string" use="optional"/>
+          </xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -1,0 +1,23 @@
+.layout {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .header {
+    width: 100%;
+    background: #eee;
+  }
+  .main {
+    flex: 1;
+    display: flex;
+    height: 0; /* Prevents main from exceeding parent */
+  }
+  .sidebar {
+    width: 250px;
+    background: #eee;
+  }
+  .content {
+    flex: 1;
+    padding: 10px;
+    background: #fff;
+  }

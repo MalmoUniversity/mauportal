@@ -1,0 +1,20 @@
+{
+	"title": "Test och validering",
+	"uid": "e-arkiv-test",
+	"privilegeGroups": [ "an-AD-group" ],
+	"description": "<h2></h2><p></p>",
+    "forms": [],
+    "groups": [  {
+             "title": "Leveranser under testning",
+             "cssClass": "rubrik-1",
+             "unselectable": true
+        },
+	{ "import" : "TEST/exempel8.json" },
+	{
+                        "title": "",
+                        "cssClass": "rubrik",
+                        "unselectable": true
+        },
+	{"import" : "TEST/testprotokoll.json"}
+    ] 
+}

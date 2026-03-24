@@ -1,0 +1,16 @@
+{
+	"title": "Portal admin",
+	"uid": "9_1_Arkiv_admin",
+	"privilegeGroups": [
+		"an-AD-group"
+	],
+    "description": "<h2>Förklaring logg</h2><br><br><pre><strong>GET\t/api/auth/me</strong>\tInloggning med auktorisering</pre><br><pre><strong>GET \t/api/content/mau-arkiv-startsidan</strong>\tAppen laddar startsidan</pre><br><pre><strong>GET \t/api/nav/mau-arkiv-startsidan</strong>\tOmdirigering till startsidan</pre><br><pre><strong>GET\t/api/nav/3_2_1_3_001_kursplaner</strong>\tExempel navigering till sida för kursplaner</pre><br><pre><strong>GET \t/api/content/3_2_1_3_001_kursplaner</strong>\tExempel appen laddar in sida för kursplaner</pre><br><pre><strong>GET\t/api/nav/search_kursplaner001</strong>\tExempel navigering till kursplaners sökformulär</pre><br><pre><strong>GET\t/api/content/search_kursplaner001</strong>\tExempel appen laddar in kursplaners sökformulär</pre><br><pre><strong>POST \t/api/search/search_kursplaner001</strong>\tExempel sökning genomförs</pre><br><pre><strong>GET\t/archive/3_2_1_3_001_kursplaner/001/xml/AR0001-2005-11-01.xml</strong>\tExempel XML-fil hämtas</pre><br><pre><strong>GET \t/archive/3_2_1_3_001_kursplaner/001/systemfiler/Utbildningsinformation.xslt</strong>\tExempel XML-fil stylas med stylesheet</pre>",
+	"forms": [],     
+	"groups": [  {
+			"title": "",
+			"cssClass": "rubrik-1",
+			"unselectable": true
+		},
+		{ "import" : "LOGG/logg3.json" }
+	]
+}

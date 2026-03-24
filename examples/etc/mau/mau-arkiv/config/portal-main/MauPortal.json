@@ -1,0 +1,54 @@
+{
+	"title": "Portalsidas_namn", 
+	"uid": "mau-arkiv-startsidan",   
+	"privilegeGroups": [ 
+		"an-AD-group", 
+		"an-anotherAD-group"
+	],
+	"description": '''
+	
+	
+	<body>
+
+	<h1>Exempelmyndighetens arkiv</h1>
+	<p>Här är det möjligt att söka i den del av Exempelmyndighetens arkiv som består av digitala handlingar. En del handlingar är tillgängliga beroende på din anställnings behörighet, medan eftersökning och utlämnade av övriga handlingar hanteras av Exempelmyndighetens arkiv- och registratur.<br>
+	Under perioden 1998-2015 har Exempelmyndighetens arkiv varit indelade i X-arkiv respektive Y-arkiv för gemensamma funktioner. I och med införande av verksamhetsbaserad arkivredovisning den 1 januari 20xx utgör hela Exempelmyndigheten endast en arkivbildare.</p>
+	
+	<p><b>Överliggande_nomenklatur</b></br>
+		Arkivredovisningen utgår t.ex. från verksamhetens processer enligt en klassificeringsstruktur. Verksamheten är uppdelad i fyra huvudområden. Huvudområdena är sedan indelade i processgrupper. Detta är ett exempel, så den överliggande nomenklaturen kan vara något annat än "Verksamhetsområden".</p>
+	<p>De fyra huvudområdena kan exempelvis vara:</p>
+	<p>&emsp; 1. Leda verksamhet - processer som styr och utvecklar verksamheten</p>
+	<p>&emsp; 2. Stödja verksamhet - processer som stödjer och möjliggör verksamhetens ledning och kärnverksamhet, så som HR, kommunikation, ekonomi, och infrastruktur.</p>
+	<p>&emsp; 3. Bedriva utbildning - processer för kärnverksamhet inom utbildning</p> 
+	<p>&emsp; 4. Bedriva forskning - processer för kärnverksamhet inom forskning</p>
+	
+	<h2>Kontakt:</h2>
+	<a href=\"mailto:arkiv@exempelmyndigheten.se\">arkiv@exempelmyndigheten.se</a>
+
+	</body>
+	
+	''',
+		
+	"forms": [],     
+	"groups": [  {
+			"title": "Överliggande_nomenklatur",
+			"cssClass": "rubrik-1",
+			"unselectable": true
+		},
+
+		{       "import": "exempel1.json"},
+		{       "import": "exempel2.json"},
+		{       "import": "exempel3.json"},
+		{       "import": "exempel4.json"},
+
+		                {
+                        "title": "",
+                        "cssClass": "rubrik",
+                        "unselectable": true
+                },
+                { "import": "TEST/exempel5.json" },
+		{ "import": "LOGG/logg2.json" }
+
+
+	]
+}

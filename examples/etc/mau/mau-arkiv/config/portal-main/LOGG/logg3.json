@@ -1,0 +1,173 @@
+{
+    "title": "Åtkomstlogg", 
+    "uid": "9_1_001_auditlog", 
+    "description": "<p>Här ni kan se åtkomstloggen för arkivet.</p>", 
+    "rootUri": "", 
+    "privilegeGroups": [
+	"an-AD-group"
+    ], 
+    "styleHrefs": [], 
+    "groups": [
+		
+		], 
+    "forms": [
+        {
+            "title": "Åtkomstlogg sök", 
+            "uid": "9_1_001_auditlog_form", 
+            "description": "<p>Här söker du på åtkomstloggen för arkivet.</p>",            
+            "database": {
+    	        "connection": "Arkiv_app",
+    	        "statement": '''
+                BEGIN
+      			DECLARE @v1 NVARCHAR(200);
+      			DECLARE @v2 NVARCHAR(200);
+      			DECLARE @v3 NVARCHAR(200);
+                DECLARE @v4 DATETIME;
+
+
+      			SET @v1 = ?;
+      			SET @v2 = ?;
+      			SET @v3 = ?;
+                SET @v4 = ?;
+        SELECT
+			[user], 
+            verb, 
+            url, 
+            createdAt, 
+            LEFT(body, 200) AS body
+	FROM
+			[dbo].[AuditLog]
+	WHERE
+          (@v1 = '' OR [AuditLog].[user] LIKE '%'+@v1+'%' )
+          AND (@v2 = '' OR [AuditLog].[url] LIKE '%'+@v2+'%' )
+          AND (@v3 = '' OR [AuditLog].[createdAt] >= @v3 )
+          AND (@v4 = '' OR [AuditLog].[createdAt] <= @v4 )
+	ORDER BY {0}
+        OFFSET (({1} - 1) * {2}) ROWS
+        FETCH NEXT {2} ROWS ONLY
+        OPTION(RECOMPILE);
+	END''',
+    "countStatement": '''
+       BEGIN
+      			DECLARE @v1 NVARCHAR(200);
+      			DECLARE @v2 NVARCHAR(200);
+      			DECLARE @v3 NVARCHAR(200);
+                DECLARE @v4 NVARCHAR(200);
+
+
+      			SET @v1 = ?;
+      			SET @v2 = ?;
+      			SET @v3 = ?;
+                SET @v4 = ?;
+        SELECT
+		COUNT(id) 
+	FROM
+			[dbo].[AuditLog]
+	WHERE
+          (@v1 = '' OR [AuditLog].[user] LIKE '%'+@v1+'%' )
+          AND (@v2 = '' OR [AuditLog].[url] LIKE '%'+@v2+'%' )
+          AND (@v3 = '' OR [AuditLog].[createdAt] >= @v3 )
+          AND (@v4 = '' OR [AuditLog].[createdAt] <= @v4 )
+
+	OPTION(RECOMPILE);
+       END
+      '''
+    },
+     "queryColumns": [
+	      {     
+	        "title": "Användare: ",
+                "uid": "qc-kurskod",	
+                "type": "text" 
+	      },
+	      {     
+	        "title": "URL",
+                "uid": "qc-engelsk-benamning",	
+                "type": "text" 
+	      },
+
+           {     
+            "title": "Från datum: ",
+                "uid": "qc-faststallandedatum",	
+                "type": "text" 
+          },
+           {     
+            "title": "Till datum: ",
+                "uid": "qc-gallandedatum",	
+                "type": "date" 
+          }
+  	],
+    "resultColumns": [
+          {
+              "title": "Användare: ",
+              "uid": "rc-kurskod",
+              "orderByOption": 0,
+              "orderByOptionAlt": 1
+          },
+          {
+              "title": "Typ: ",
+              "uid": "rc-svensk-benamning",
+              "orderByOption": 2,
+              "orderByOptionAlt": 3
+          },
+          {
+              "title": "URL: ",
+              "uid": "rc-engelsk-benamning",
+              "orderByOption": 4,
+              "orderByOptionAlt": 5
+          },
+          {
+              "title": "Tidpunkt: ",
+              "uid": "rc-faststallandedatum",
+              "orderByOption": 6,
+              "orderByOptionAlt": 7
+          },
+	      {
+              "title": "Detaljer: ",
+              "uid": "rc-gallandedatum"
+          }
+       ],
+       "orderBy": {
+           "label": "Sortera på: ",
+           "defaultOption": 0,
+           "hidden": true,
+           "options": [
+                 {
+                        "label": "ANVÄNDARE:  stigande",
+                        "value": "[AuditLog].[user] ASC"
+                    },
+		    {
+                        "label": "ANVÄNDARE:  fallande",
+                        "value": "[AuditLog].[user] DESC"
+                    },
+                    {
+                        "label": "TYP:  stigande",
+                        "value": "[AuditLog].[verb] ASC"
+                    },
+		    {
+                        "label": "TYP:  fallande",
+                        "value": "[AuditLog].[verb] DESC"
+                    },
+                    {
+                        "label": "URL:  stigande",
+                        "value": "[AuditLog].[url] ASC"
+                    },
+		    {
+                        "label": "URL:  fallande",
+                        "value": "[AuditLog].[url] DESC"
+                    },
+                    {
+                        "label": "TIDPUNKT:  stigande",
+                        "value": "[AuditLog].[createdAt] ASC"
+                    },
+		    {
+                        "label": "TIDPUNKT:  fallande",
+                        "value": "[AuditLog].[createdAt] DESC"
+                    }
+		   
+		]
+            }
+        
+ 
+        }
+    ]
+}

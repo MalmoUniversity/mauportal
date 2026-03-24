@@ -1,0 +1,85 @@
+.header-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: white;
+    border-bottom: 1px solid #bbbbbb;
+    border-top: 20px solid #333;
+    padding: 0 20px;
+
+    .logo-large {
+        width: 240px;
+        height: auto;
+        margin: 20px 20px 20px 0;
+    }
+
+    .app-name-section {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin: 20px;
+        gap: 5px;
+    }
+
+    .app-name {
+        color: #333;
+        display: flex;
+        align-items: baseline;
+        gap: 7px;
+
+        .version {
+            font-size: 0.85rem;
+            color: #999;
+            font-weight: 450;
+        }
+
+        h2 {
+            margin: 0;
+        }
+    }
+
+    .spacer {
+        flex: 1;
+    }
+
+    .user-menu {
+        align-self: flex-end;
+        
+        button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: maroon;
+        }
+
+        .user-name {
+            margin: 0 4px;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        mat-icon {
+            color: maroon;
+        }
+    }
+
+    .user-info {
+        padding: 8px 16px;
+        
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            
+            strong {
+                margin-bottom: 4px;
+            }
+            
+            small {
+                color: #666;
+            }
+        }
+    }
+}
+

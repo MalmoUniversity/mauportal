@@ -1,0 +1,23 @@
+{
+    "version": "1.0.2",
+    "private": true,
+    "packageManager": "npm@10.9.2",
+    "workspaces": [
+        "frontend",
+        "backend",
+        "shared"
+    ],
+    "scripts": {
+        "clean-modules": "rm -rf node_modules",
+        "clean-shared": "rm -rf shared/dist shared/tsconfig.tsbuildinfo",
+        "clean-backend": "rm -rf backend/dist backend/tsconfig.tsbuildinfo",
+        "clean-build": "npm run clean-shared && npm run clean-backend",
+    
+        "build": "npm run clean-build && npm run build --prefix shared && npm run build --prefix backend",
+        "package": "npm install && npm run build && npm run clean-modules && npm install && npm run copy-builds", 
+
+        "clean-symlinks": "rm -f node_modules/@mau-arkiv/shared && rm -f node_modules/backend && rm -f node_modules/frontend",
+        "copy-builds":"npm run clean-symlinks && cp -r shared/dist/ node_modules/@mau-arkiv/shared && cp -r backend/dist ./dist && cp -r node_modules ./dist/ && cp -r backend/config ./dist/"
+
+    }
+}

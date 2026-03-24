@@ -1,0 +1,28 @@
+{
+    "title": "Testprotokoll", 
+    "uid": "testprotokoll", 
+    "rootUri": "/mnt/monteringspunkt/Arkiv/TEST/PROTOKOLL", 
+    "description": "<a href='content/handling-bladdra00'>Gå till testprotokoll</a>", 
+    "privilegeGroups": [
+	"an-AD-group",
+	"an-anotherAD-group",
+        "an-anotherAD-group"
+    ], 
+    "styleHrefs": [], 
+    "groups": [],
+	"forms": [
+        {
+			"title": "",
+			"uid": "handling-bladdra00", 
+			"browse": {
+				"displayFiles": true
+			},
+			"description": ""
+		}  
+	]
+}
+
+
+
+
+

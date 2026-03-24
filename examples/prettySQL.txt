@@ -1,0 +1,43 @@
+"database": {
+    "connection": "Arkiv_test",
+    "statement": '''
+        BEGIN
+            DECLARE @v1 NVARCHAR(200);
+            DECLARE @v2 NVARCHAR(200);
+
+            SET @v1 = ?;
+            SET @v2 = ?;
+
+            SELECT
+                [TestIndex].[PERSONNUMMER],
+                [TestIndex].[DATUM],
+                [TestIndex].[uri]
+            FROM
+                [dbo].[TestIndex]
+            WHERE
+                (@v1 = '' OR [TestIndex].[PERSONNUMMER] LIKE '%'+@v1+'%')
+                AND (@v2 = '' OR [TestIndex].[DATUM] LIKE '%'+@v2+'%')
+            ORDER BY {0}
+            OFFSET (({1} - 1) * {2}) ROWS
+            FETCH NEXT {2} ROWS ONLY
+            OPTION(RECOMPILE);
+        END
+    ''',
+    "countStatement": '''
+        BEGIN
+            DECLARE @v1 NVARCHAR(200);
+            DECLARE @v2 NVARCHAR(200);
+
+            SET @v1 = ?;
+            SET @v2 = ?;
+
+            SELECT
+                COUNT(*)
+            FROM
+                [dbo].[TestIndex]
+            WHERE
+                (@v1 = '' OR [TestIndex].[PERSONNUMMER] LIKE '%'+@v1+'%')
+                AND (@v2 = '' OR [TestIndex].[DATUM] LIKE '%'+@v2+'%')
+            OPTION(RECOMPILE);
+        END
+    ''',

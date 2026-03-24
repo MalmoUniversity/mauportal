@@ -1,0 +1,35 @@
+{
+    "portal-config": {
+        "path": "/etc/mau/mau-arkiv/config/portal-main",
+        "root-file": "MauPortal.json",
+        "read-model": "strict"
+    },
+    "logging": {
+        "level": "info",
+        "console": {
+            "enabled": true,
+            "colorize": true
+        },
+        "file": {
+            "enabled": true,
+            "filename": "/home/mau-arkiv/logs/mau-arkiv-%DATE%.log",
+            "maxSize": "20m",
+            "maxFiles": "14d",
+            "datePattern": "YYYY-MM-DD"
+        },
+        "database": {
+            "enabled": false,
+            "connectionString": "",
+            "tableName": "application_logs"
+        },
+        "format": {
+            "timestamp": true,
+            "json": false,
+            "prettyPrint": false
+        }
+    },
+    "audit-log": {
+        "enabled": true,
+        "db": "Arkiv_app"
+    }
+}

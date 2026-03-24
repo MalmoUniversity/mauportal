@@ -1,0 +1,54 @@
+.title {
+    background-color: #333333;
+    color: white;
+}
+
+.item {
+    :hover {
+        padding-left: 2px;
+        cursor: pointer;
+        color: red;
+        font-weight: bold;
+    }
+    padding: 2px 5px 2px 5px;
+    border-bottom: 1px solid #585858;
+
+    .divider {
+        font-weight: bold;
+        padding-left: 0px;
+        text-transform: uppercase;
+        font-size: 14px;
+        color: #666666;
+        margin-top: 10px;
+        margin-bottom: 5px;
+        padding-bottom: 3px;
+        cursor: default;
+    }
+
+    &.disabled {
+        a {
+            cursor: not-allowed;
+            color: #999;
+            opacity: 0.5;
+            
+            &:hover {
+                color: #999;
+                font-weight: normal;
+                padding-left: 0;
+            }
+        }
+    }
+
+    a.disabled-link {
+        cursor: not-allowed;
+        color: #999;
+        opacity: 0.5;
+        pointer-events: none;
+        
+        &:hover {
+            color: #999;
+            font-weight: normal;
+            padding-left: 0;
+        }
+    }
+}

@@ -1,0 +1,18 @@
+
+<div class="layout">
+  <div class="header">
+    <app-header-component></app-header-component>
+  </div>
+  <div class="main">
+    @if (isAuthenticated$ | async) {
+      <div class="sidebar">
+        <app-sidebar-component></app-sidebar-component>
+      </div>
+    }
+    <div class="content">
+      <router-outlet />
+    </div>
+  </div>
+</div>
+
+
