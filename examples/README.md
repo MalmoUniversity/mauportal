@@ -66,3 +66,7 @@ for better readability.
 The file `prettySQL.txt` contains the same SQL query as found in `example7.json` and `example8.json`.
 If you prefer improved readability, the contents of `prettySQL.txt` can be substituted into those
 two JSON files.
+
+## 4. Sample nginx configuration
+
+In the nginx directory there is a sample file. Put it in /etc/nginx/sites-available and update it accordingly. Then follow the manual.

@@ -2,6 +2,8 @@
 
 This project is a full-stack application that consists of an Express backend, an Angular frontend and a shared package. These three parts are organized into separate directories for better maintainability and clarity.
 
+Also in the pre-build directory a "mau-arkiv" application directory is provided. Move the entire directory to /opt/mau, and follow relevant parts in the manual.
+
 ## Project Structure
 
 ```

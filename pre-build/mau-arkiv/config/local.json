@@ -1,0 +1,90 @@
+{
+    "database": [
+       {
+            "name": "Arkiv_idx",
+            "config": {
+                "server": "<database server>",
+                "database": "Arkiv_idx",
+                "authentication": {
+                    "type": "default",
+                    "options": {
+                        "userName": "sql-user",
+                        "password": "password"
+                    }
+                },
+                "options": {
+                    "port": <port number>,
+                    "encrypt": true,
+                    "trustServerCertificate": true,
+                    "database": "Arkiv_idx",
+                    "connectionTimeout": 60000
+                }
+            }
+        },
+	{
+            "name": "Arkiv_app",
+            "config": {
+                "server": "<database server>",
+                "database": "Arkiv_app",
+		"userName": "sql-user",
+                "password": "password",
+                "authentication": {
+                    "type": "default",
+                    "options": {
+                        "userName": "sql-user",
+                        "password": "password"
+                    }
+                },
+                "options": {
+                    "port": <port number>,
+                    "encrypt": true,
+                    "trustServerCertificate": true,
+                    "database": "Arkiv_app",
+                    "connectionTimeout": 60000
+                }
+            }
+        },
+	{
+	      "name": "Arkiv_test",
+            "config": {
+                "server": "<database server>",
+                "database": "Arkiv_test",
+		"userName": "sql-user",
+                "password": "password",
+                "authentication": {
+                    "type": "default",
+                    "options": {
+                        "userName": "sql-user",
+                        "password": "password"
+                    }
+                },
+                "options": {
+                    "port": <port number>,
+                    "encrypt": true,
+                    "trustServerCertificate": true,
+                    "database": "Arkiv_test",
+                    "connectionTimeout": 60000
+                }
+            }
+	}
+    ],
+    "archive": {
+        "path": "/mnt",
+        "assumedRoot": "/mnt"
+    },
+ "saml": {
+        "issuer": "https://<webserver>/login",
+        "callbackUrl": "https://<webserver>/api/auth/saml/callback",
+        "identifierFormat": "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress",
+        "metadataUrl": "https://<adfs>/federationmetadata/2007-06/federationmetadata.xml",
+        "signatureAlgorithm": "sha256",
+        "sp": {
+            "entity_id": "<idp-identifier>",
+            "assert_endpoint": "https://<webserver>/api/auth/saml/callback",
+      "audience": "https://<webserver>"
+        },
+        "idp": {
+            "metadata_url": "https://<adfs>/federationmetadata/2007-06/federationmetadata.xml"
+        }
+    }
+}
