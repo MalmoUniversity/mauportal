@@ -1,7 +1,7 @@
 <div *ngIf="form">
   <div class="form-wrapper">
     <h2>{{ form.title }}</h2>
-    <form [formGroup]="formGroup" (keydown.enter)="$event.preventDefault(); search()">
+    <form [formGroup]="formGroup" (keydown.enter)="$event.preventDefault(); onSearchSubmit()">
       <div class="form-container">
         <div class="form-fields">
           <div *ngFor="let col of form.queryColumns;">
@@ -13,7 +13,7 @@
         </div>
         
         <div class="button-group">
-          <button mat-raised-button color="primary" type="button" (click)="search()" [disabled]="searchState === 'loading'">
+          <button mat-raised-button color="primary" type="button" (click)="onSearchSubmit()" [disabled]="searchState === 'loading'">
             {{ searchState === 'loading' ? 'Söker...' : 'Sök' }}
           </button>
           <button mat-stroked-button color="warn" type="button" (click)="reset();">Rensa</button>

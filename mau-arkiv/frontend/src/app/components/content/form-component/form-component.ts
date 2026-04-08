@@ -77,6 +77,11 @@ export class FormComponent implements AfterViewInit, OnChanges {
     this.search();
   }
 
+  onSearchSubmit(): void {
+    this.pageIndex = 0;
+    this.search();
+  }
+
   search(): void {
     // const values = this.formGroup.value;
     if (!this.form?.uid) {
