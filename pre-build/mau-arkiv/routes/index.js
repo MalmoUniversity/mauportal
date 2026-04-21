@@ -7,6 +7,7 @@ const search_controller_1 = require("../controllers/search-controller");
 const archive_controller_1 = require("../controllers/archive-controller");
 const auth_controller_1 = require("../controllers/auth-controller");
 const controller_resolver_1 = require("../core/utils/controller-resolver");
+const render_controllers_1 = require("../controllers/render-controllers");
 function setRoutes(app) {
     const indexController = new (require('../controllers/index')).IndexController();
     app.get('/api/', indexController.getIndex.bind(indexController));
@@ -27,5 +28,6 @@ function setRoutes(app) {
     app.post('/api/search/:uid', (0, controller_resolver_1.resolveController)(search_controller_1.SearchController, 'search'));
     // Archive routes - using DI
     app.get('/archive/:uid/:uri(*)', (0, controller_resolver_1.resolveController)(archive_controller_1.ArchiveController, 'getFile'));
+    app.get('/api/render/:uid/:uri(*)', (0, controller_resolver_1.resolveController)(render_controllers_1.RenderController, 'renderFile'));
 }
 exports.setRoutes = setRoutes;

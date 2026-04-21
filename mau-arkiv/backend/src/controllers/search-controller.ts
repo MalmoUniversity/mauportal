@@ -122,12 +122,22 @@ export class SearchController extends BaseController {
 
             const processedRecords = result.recordset.map((record: any) => {
                 
-                urlColumns.forEach((colName: string) => {
-                    if (record[colName]) {
-                        record[colName] = `/archive/${parentUid}/${record[colName]}`;
-                    }
-                });
+            const xslTransform = config.get<string>('archive.xslTransform') ?? 'server';
+
+            urlColumns.forEach((colName: string) => {
+    		if (record[colName]) {
+        	    const fileUri = record[colName] as string;
+                record[colName] = `/archive/${parentUid}/${fileUri}`;
+                const isXml   = fileUri.toLowerCase().endsWith('.xml');
                 
+                if(isXml) {
+                    if(xslTransform !== 'client') { // Default to server-side transform if not explicitly set to "client"
+                        record[colName] = `/api/render/${parentUid}/${fileUri}`
+                    }
+                }
+                
+    		}
+	     });
                 return record;
              });
              
@@ -167,8 +177,7 @@ export class SearchController extends BaseController {
 
     // TODO: Should be moved to NavigationManager
     private getForm(uid: string, res: Response): any {
-        const items = navigationManager.getValue();
-        const item = items.find(x => x.uid === uid);
+        const item = navigationManager.getItemByUid(uid);
 
         if (!item) {
             res.status(404).json({ error: "Form not found" });

@@ -70,7 +70,9 @@
     ],
     "archive": {
         "path": "/mnt",
-        "assumedRoot": "/mnt"
+        "assumedRoot": "/mnt",
+	"xslTransform": "server",
+	"xslTransform_comment": "alternatives are: 'client' or 'server'"
     },
  "saml": {
         "issuer": "https://<webserver>/login",

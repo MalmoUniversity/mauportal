@@ -8,6 +8,10 @@ class NavigationManager {
     getValue(): NavigationItem[] {
         return this.value;
     }
+
+    getItemByUid(uid: string): NavigationItem | undefined {
+        return this.value.find(x => x.uid === uid);
+    }
     
     load(configRoot: string, configPath: string): void {
         logger.info('Loading navigation configuration', { configRoot, configPath });

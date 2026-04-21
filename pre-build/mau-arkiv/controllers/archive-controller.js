@@ -171,8 +171,7 @@ let ArchiveController = class ArchiveController extends base_controller_1.BaseCo
     }
     // TODO: Should be moved to NavigationManager
     getItem(uid, res) {
-        const items = navigation_manager_1.default.getValue();
-        const item = items.find(x => x.uid === uid);
+        const item = navigation_manager_1.default.getItemByUid(uid);
         if (!item) {
             res.status(404).json({ error: "Form not found" });
             logger_1.default.error('Form with ID not found', { uid });

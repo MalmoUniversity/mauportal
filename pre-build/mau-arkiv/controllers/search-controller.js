@@ -120,9 +120,18 @@ let SearchController = class SearchController extends base_controller_1.BaseCont
                 });
                 const urlColumns = urlIndices.map((index) => dataKeys[index]);
                 const processedRecords = result.recordset.map((record) => {
+                    var _a;
+                    const xslTransform = (_a = config_1.default.get('archive.xslTransform')) !== null && _a !== void 0 ? _a : 'server';
                     urlColumns.forEach((colName) => {
                         if (record[colName]) {
-                            record[colName] = `/archive/${parentUid}/${record[colName]}`;
+                            const fileUri = record[colName];
+                            record[colName] = `/archive/${parentUid}/${fileUri}`;
+                            const isXml = fileUri.toLowerCase().endsWith('.xml');
+                            if (isXml) {
+                                if (xslTransform !== 'client') { // Default to server-side transform if not explicitly set to "client"
+                                    record[colName] = `/api/render/${parentUid}/${fileUri}`;
+                                }
+                            }
                         }
                     });
                     return record;
@@ -164,8 +173,7 @@ let SearchController = class SearchController extends base_controller_1.BaseCont
     }
     // TODO: Should be moved to NavigationManager
     getForm(uid, res) {
-        const items = navigation_manager_1.default.getValue();
-        const item = items.find(x => x.uid === uid);
+        const item = navigation_manager_1.default.getItemByUid(uid);
         if (!item) {
             res.status(404).json({ error: "Form not found" });
             logger_1.default.error('Form with ID not found', { uid });

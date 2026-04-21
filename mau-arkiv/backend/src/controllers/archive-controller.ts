@@ -144,8 +144,7 @@ export class ArchiveController extends BaseController {
 
      // TODO: Should be moved to NavigationManager
         private getItem(uid: string, res: Response): NavigationItem | undefined {
-            const items = navigationManager.getValue();
-            const item = items.find(x => x.uid === uid);
+            const item = navigationManager.getItemByUid(uid);
     
             if (!item) {
                 res.status(404).json({ error: "Form not found" });

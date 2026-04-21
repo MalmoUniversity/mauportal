@@ -12,6 +12,9 @@ class NavigationManager {
     getValue() {
         return this.value;
     }
+    getItemByUid(uid) {
+        return this.value.find(x => x.uid === uid);
+    }
     load(configRoot, configPath) {
         logger_1.default.info('Loading navigation configuration', { configRoot, configPath });
         try {

@@ -5,6 +5,7 @@ import { ArchiveController } from "../controllers/archive-controller";
 import { AuthController } from "../controllers/auth-controller";
 import { requireAuth, optionalAuth } from "../middleware/auth-middleware";
 import { resolveController } from "../core/utils/controller-resolver";
+import { RenderController } from "../controllers/render-controllers"; 
 
 export function setRoutes(app: any) {
     const indexController = new (require('../controllers/index')).IndexController();
@@ -31,7 +32,8 @@ export function setRoutes(app: any) {
     app.post('/api/search/:uid', resolveController(SearchController, 'search'));
 
     // Archive routes - using DI
-    app.get('/archive/:uid/:uri(*)', resolveController(ArchiveController, 'getFile'));
+    app.get('/archive/:uid/:uri(*)',        resolveController(ArchiveController, 'getFile'));
+    app.get('/api/render/:uid/:uri(*)',     resolveController(RenderController, 'renderFile'));
 }
 
 

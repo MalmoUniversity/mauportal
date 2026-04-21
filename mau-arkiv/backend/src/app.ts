@@ -11,6 +11,7 @@ import { createLoggingMiddleware } from './middleware/logging-middleware';
 import { requestContextMiddleware } from './middleware/di-middleware';
 import { createAuditLogMiddleware } from './middleware/audit-log-middleware';
 import db from './core/utils/database';
+import c from 'config';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -84,6 +85,16 @@ logger.info('Middleware configured successfully');
 
 // Set up routes
 setRoutes(app);
+
+const xslTransformConfig = config.get<string>('archive.xslTransform');
+if (xslTransformConfig) {
+    if (xslTransformConfig !== 'server' && xslTransformConfig !== 'client') {
+        logger.warn('Invalid XSL Transform configuration. Expected "server" or "client". Defaulting to "server".', { xslTransformConfig });
+    } else {
+        logger.info('XSL Transform configuration', { xslTransform: xslTransformConfig });
+    }
+} 
+
 
 // Serve the Angular frontend for all other routes.This is needed for runnig via pm2.
 app.get('/', (req: Request, res: Response) => {

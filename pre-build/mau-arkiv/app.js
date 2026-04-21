@@ -85,6 +85,15 @@ app.use((0, cors_1.default)({
 logger_1.default.info('Middleware configured successfully');
 // Set up routes
 (0, index_1.setRoutes)(app);
+const xslTransformConfig = config_1.default.get('archive.xslTransform');
+if (xslTransformConfig) {
+    if (xslTransformConfig !== 'server' && xslTransformConfig !== 'client') {
+        logger_1.default.warn('Invalid XSL Transform configuration. Expected "server" or "client". Defaulting to "server".', { xslTransformConfig });
+    }
+    else {
+        logger_1.default.info('XSL Transform configuration', { xslTransform: xslTransformConfig });
+    }
+}
 // Serve the Angular frontend for all other routes.This is needed for runnig via pm2.
 app.get('/', (req, res) => {
     res.sendFile('index.html', { root: 'public' });

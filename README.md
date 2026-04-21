@@ -4,7 +4,7 @@ This project is a full-stack application that consists of an Express backend, an
 
 Also in the pre-build directory a "mau-arkiv" application directory is provided. Move the entire directory to /opt/mau, and follow relevant parts in the manual.
 
-Currently two releases are published - version 1.0.3 that handles XSL transformation in frontend and version 2.0.0 that handles XSL transformation in backend with xsltproc (that needs to be installed on your system).
+Currently two releases are published - version 1.0.3 that handles XSL transformation in frontend and version 2.0.0 that handles XSL transformation in backend with xsltproc (that needs to be installed on your system). In the configuration file 'local.json' you can set the value 'xslTransform' whether to handle XSL transformation in back- or frontend.
 
 ## Project Structure
 
