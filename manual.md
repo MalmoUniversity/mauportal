@@ -235,6 +235,49 @@ A sample nginx configuration file named `mau-arkiv` is provided. Place it in:
 
 Update the file with your domain name and the correct paths to your certificate and key files.
 
+The block below is a minimum nginx configuration to make it work. There is a redirection HTTP to HTTPS and a location record. MauArkiv's application "app.js" is running on port 3000 on localhost, so this configuration tells nginx where to find it.
+
+```
+server {
+    listen 80;
+    server_name arkiv.internal.example.com www.example.com; # Set correct URL
+    return 301 https://$host$request_uri;  # Redirect HTTP to HTTPS
+}
+
+server {
+    listen 443 ssl;
+    server_name arkiv.internal.example.com www.example.com;
+
+    ssl_certificate /etc/ssl/certs/<your_cert_file>.crt;
+    ssl_certificate_key /etc/ssl/private/<your_key_file>.key;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+
+    root /var/www/mau-arkiv;
+    index index.html index.htm;
+location / {
+        proxy_pass         http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+
+        # WebSocket & keep-alive
+        proxy_set_header   Upgrade $http_upgrade;
+        proxy_set_header   Connection "upgrade";
+
+        # Forward client info to Express
+        proxy_set_header   Host $host;
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+
+        # Timeouts (tune as needed)
+        proxy_connect_timeout   5s;
+        proxy_send_timeout     30s;
+        proxy_read_timeout     60s;
+    }
+}
+```
+
 ### 4.3 Enable the site
 
 Create a symbolic link to enable the site:
