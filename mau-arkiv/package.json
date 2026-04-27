@@ -19,5 +19,9 @@
         "clean-symlinks": "rm -f node_modules/@mau-arkiv/shared && rm -f node_modules/backend && rm -f node_modules/frontend",
         "copy-builds":"npm run clean-symlinks && cp -r shared/dist/ node_modules/@mau-arkiv/shared && cp -r backend/dist ./dist && cp -r node_modules ./dist/ && cp -r backend/config ./dist/"
 
+    },
+    "overrides": {
+        "js-yaml": "^4.1.0",
+        "uuid": "^11.0.5"
     }
 }
