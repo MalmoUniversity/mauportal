@@ -316,11 +316,10 @@ sudo mkdir -p /etc/mau/mau-arkiv/config/portal-main/
 Extract `portal-config.zip` in your home directory and copy the configuration files:
 
 ```bash
-unzip portal-config.zip
-sudo cp -r etc/mau /etc/
+sudo cp examples/etc/mau/mau-arkiv/config/portal-main/* /etc/mau/mau-arkiv/config/portal-main/
 ```
 
-This places `MauPortal.json` in `/etc/mau/mau-arkiv/config/portal-main/`. If you rename this file, make sure the new name is also set as the value of `root-file` in `default.json` (see step 1.3).
+This places `MauPortal.json` in `/etc/mau/mau-arkiv/config/portal-main/`. If you rename this file, make sure the new name is also set as the value of `root-file` in `default.json` (see step 1.3). If you for some reason want to use another path to your `MauPortal.json`, an entry must be made in `default.json`, where you under "portal-config" put `"configRoot":"/etc/path/to/your/new/portal-main"` 
 
 ---
 
