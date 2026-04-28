@@ -313,7 +313,7 @@ Create the configuration directory:
 sudo mkdir -p /etc/mau/mau-arkiv/config/portal-main/
 ```
 
-Extract `portal-config.zip` in your home directory and copy the configuration files:
+Copy the portal's configuration files:
 
 ```bash
 sudo cp examples/etc/mau/mau-arkiv/config/portal-main/* /etc/mau/mau-arkiv/config/portal-main/
