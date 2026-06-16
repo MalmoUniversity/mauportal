@@ -21,7 +21,7 @@
     "@mau-arkiv/shared": "file:../shared",
     "@types/express-session": "^1.18.2",
     "@types/saml2-js": "^3.0.4",
-    "axios": "^1.7.9",
+    "axios": "^1.16.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^4.22.1",
