@@ -14,7 +14,7 @@
         "clean-build": "npm run clean-shared && npm run clean-backend",
     
         "build": "npm run clean-build && npm run build --prefix shared && npm run build --prefix backend",
-        "package": "npm install && npm run build && npm run clean-modules && npm install && npm run copy-builds", 
+        "package": "npm ci && npm run build && npm run clean-modules && npm ci && npm run copy-builds", 
 
         "clean-symlinks": "rm -f node_modules/@mau-arkiv/shared && rm -f node_modules/backend && rm -f node_modules/frontend",
         "copy-builds":"npm run clean-symlinks && cp -r shared/dist/ node_modules/@mau-arkiv/shared && cp -r backend/dist ./dist && cp -r node_modules ./dist/ && cp -r backend/config ./dist/"
