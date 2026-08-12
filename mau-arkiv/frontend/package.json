@@ -24,8 +24,8 @@
   "dependencies": {
     "@angular/cdk": "~20.2.0",
     "@angular/common": "^20.3.27",
-    "@angular/compiler": "^20.3.18",
-    "@angular/core": "^20.3.25",
+    "@angular/compiler": "^20.3.27",
+    "@angular/core": "^20.3.27",
     "@angular/forms": "^20.3.18",
     "@angular/material": "~20.2.0",
     "@angular/platform-browser": "^20.3.18",
