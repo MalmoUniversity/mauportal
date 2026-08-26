@@ -31,7 +31,7 @@
     "mssql": "^11.0.1",
     "reflect-metadata": "^0.2.2",
     "saml2-js": "^4.0.4",
-    "tedious": "^19.2.1",
+    "tedious": "^20.0.0",
     "ts-node": "^10.9.2",
     "tsyringe": "^4.10.0",
     "typescript": "^4.5.4",
