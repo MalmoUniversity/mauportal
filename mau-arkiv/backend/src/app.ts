@@ -102,7 +102,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 // Serve index.html for all routes starting with 'content' to support client-side routing
-app.get('/content/*', (req: Request, res: Response) => {
+app.get('/content/*splat', (req: Request, res: Response) => {
     res.sendFile('index.html', { root: 'public' });
 });
 
