@@ -32,8 +32,8 @@ export function setRoutes(app: any) {
     app.post('/api/search/:uid', resolveController(SearchController, 'search'));
 
     // Archive routes - using DI
-    app.get('/archive/:uid/:uri(*)',        resolveController(ArchiveController, 'getFile'));
-    app.get('/api/render/:uid/:uri(*)',     resolveController(RenderController, 'renderFile'));
+    app.get('/archive/:uid/*uri',        resolveController(ArchiveController, 'getFile'));
+    app.get('/api/render/:uid/*uri',     resolveController(RenderController, 'renderFile'));
 }
 
 
