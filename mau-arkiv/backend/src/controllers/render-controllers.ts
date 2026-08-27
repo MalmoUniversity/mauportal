@@ -27,7 +27,7 @@ export class RenderController extends BaseController {
     let uri!: string;
 
     try {
-        if (!uidParam || !uriParam || Array.isArray(uidParam) || Array.isArray(uriParam)) {
+        if (!uidParam || !uriParam || Array.isArray(uidParam)) {
             res.status(400).json({ error: 'Bad Request', message: 'Both uid and uri are required' });
             return;
         }
