@@ -25,6 +25,9 @@ export class ArchiveController extends BaseController {
         user: this.currentUser?.email 
     });
 
+    let uid!: string;
+    let uri!: string;
+        
     try {
         // Validate parameters
         if (!uidParam || !uriParam || Array.isArray(uidParam) || Array.isArray(uriParam)) {
@@ -36,8 +39,8 @@ export class ArchiveController extends BaseController {
             return;
         }
 
-        const uid = uidParam;
-        const uri = uriParam;
+        uid = uidParam;
+        uri = uriParam;
 
         // Decode URI in case it's URL encoded
         const decodedUri = decodeURIComponent(uri);
