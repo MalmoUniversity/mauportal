@@ -19,9 +19,12 @@ export class RenderController extends BaseController {
         super(requestContext);
     }
 
-    async someHandler(req: Request, res: Response): Promise<void> {
+    async renderFile(req: Request, res: Response): Promise<void> {
     const uidParam = req.params.uid;
     const uriParam = req.params.uri;
+
+    let uid!: string;
+    let uri!: string;
 
     try {
         if (!uidParam || !uriParam || Array.isArray(uidParam) || Array.isArray(uriParam)) {
@@ -29,8 +32,8 @@ export class RenderController extends BaseController {
             return;
         }
 
-        const uid = uidParam;
-        const uri = uriParam;
+        uid = uidParam;
+        uri = uriParam;
 
         const decodedUri = decodeURIComponent(uri);
         const basePath     = config.get<string>('archive.path');
