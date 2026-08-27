@@ -19,33 +19,27 @@ export class RenderController extends BaseController {
         super(requestContext);
     }
 
-    async renderFile(req: Request, res: Response): Promise<void> {
-        const uid = req.params.uid;
-        const uri = req.params.uri;
+    async someHandler(req: Request, res: Response): Promise<void> {
+    const uidParam = req.params.uid;
+    const uriParam = req.params.uri;
 
-        logger.info('Render request received', {
-            uid,
-            uri,
-            user: this.currentUser?.email
-        });
+    try {
+        if (!uidParam || !uriParam || Array.isArray(uidParam) || Array.isArray(uriParam)) {
+            res.status(400).json({ error: 'Bad Request', message: 'Both uid and uri are required' });
+            return;
+        }
 
-        try {
-            if (!uid || !uri) {
-                res.status(400).json({ error: 'Bad Request', message: 'Both uid and uri are required' });
-                return;
-            }
+        const uid = uidParam;
+        const uri = uriParam;
 
-            const decodedUri = decodeURIComponent(uri);
-
-            const basePath     = config.get<string>('archive.path');
-            const assumedRoot  = config.get<string>('archive.assumedRoot');
-
-            // Resolve the navigation item — same as ArchiveController
-            const item = this.getItem(uid, res);
-            if (!item) return;
-
-            const archiveRoot = item.rootUri.replace(assumedRoot, basePath);
-            const xmlPath     = path.join(archiveRoot, decodedUri);
+        const decodedUri = decodeURIComponent(uri);
+        const basePath     = config.get<string>('archive.path');
+        const assumedRoot  = config.get<string>('archive.assumedRoot');
+        // Resolve the navigation item — same as ArchiveController
+        const item = this.getItem(uid, res);
+        if (!item) return;
+        const archiveRoot = item.rootUri.replace(assumedRoot, basePath);
+        const xmlPath     = path.join(archiveRoot, decodedUri);
 
             // Security: must stay within the archive base path
             if (!xmlPath.startsWith(path.resolve(basePath))) {
