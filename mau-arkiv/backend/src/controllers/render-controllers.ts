@@ -33,7 +33,7 @@ export class RenderController extends BaseController {
         }
 
         uid = uidParam;
-        uri = uriParam;
+        uri = Array.isArray(uriParam) ? uriParam.join('/') : uriParam;
 
         const decodedUri = decodeURIComponent(uri);
         const basePath     = config.get<string>('archive.path');
