@@ -19,29 +19,28 @@ export class ArchiveController extends BaseController {
     const uidParam = req.params.uid;
     const uriParam = req.params.uri;
 
-    logger.info('Archive file request received', { 
-        uid: uidParam, 
-        uri: uriParam,
-        user: this.currentUser?.email 
-    });
+logger.info('Archive file request received', { 
+    uid: uidParam, 
+    uri: uriParam,
+    user: this.currentUser?.email 
+});
 
-    let uid!: string;
-    let uri!: string;
-        
-    try {
-        // Validate parameters
-        if (!uidParam || !uriParam || Array.isArray(uidParam) || Array.isArray(uriParam)) {
-            logger.warn('Missing or invalid required parameters', { uid: uidParam, uri: uriParam });
-            res.status(400).json({ 
-                error: 'Bad Request', 
-                message: 'Both uid and uri parameters are required and must be single values' 
-            });
-            return;
-        }
+let uid!: string;
+let uri!: string;
 
-        uid = uidParam;
-        uri = uriParam;
+try {
+    if (!uidParam || !uriParam || Array.isArray(uidParam)) {
+        logger.warn('Missing or invalid required parameters', { uid: uidParam, uri: uriParam });
+        res.status(400).json({ 
+            error: 'Bad Request', 
+            message: 'Both uid and uri parameters are required and must be single values' 
+        });
+        return;
+    }
 
+    uid = uidParam;
+    uri = Array.isArray(uriParam) ? uriParam.join('/') : uriParam;
+   
         // Decode URI in case it's URL encoded
         const decodedUri = decodeURIComponent(uri);
         
