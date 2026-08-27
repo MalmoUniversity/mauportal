@@ -13,36 +13,35 @@ export class SearchController extends BaseController {
     constructor(requestContext: RequestContext) {
         super(requestContext);
     }
+	async search(req: Request, res: Response): Promise<void> {
+    const sql = require('mssql');
+    const uidParam = req.params.uid;
 
-    async search(req: Request, res: Response): Promise<void> {
-        const sql = require('mssql');
+    if (!uidParam || Array.isArray(uidParam)) {
+        res.status(400).json({ error: 'Bad Request', message: 'uid parameter is required' });
+        return;
+    }
+    const uid = uidParam;
 
-        const uid = req.params.uid;
-
-        // Access current user if needed
-        if (this.currentUser) {
-            logger.info('Search request from authenticated user', { 
-                uid,
-                user: this.currentUser.email 
-            });
+    // Access current user if needed
+    if (this.currentUser) {
+        logger.info('Search request from authenticated user', { 
+            uid,
+            user: this.currentUser.email 
+        });
+    }
+    let pool;
+    try {
+        const { formId, params, orderBy, page, pageSize } = req.body;
+        const form = this.getForm(uid, res);
+    
+        logger.info('Received search request for form ID', { uid });
+        if (!form) {
+            logger.warn('Form with ID not found', { uid });
+            res.status(404).json({ error: 'Form not found' });
+            return;
         }
-
-        let pool;
-        try {
-            const { formId, params, orderBy, page, pageSize } = req.body;
-            const form = this.getForm(uid, res);
-        
-
-            logger.info('Received search request for form ID', { uid });
-
-            if (!form) {
-                logger.warn('Form with ID not found', { uid });
-                res.status(404).json({ error: 'Form not found' });
-                return;
-            }
-
-            
-            
+                    
             logger.info('Found form with ID', { uid: form.uid });
             if (!form.database) {
                 logger.error('Database configuration not found for form', { uid });
