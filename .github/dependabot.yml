@@ -1,0 +1,13 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/mau-arkiv"
+    schedule:
+      interval: "weekly"
+    target-branch: "main"
+
+  - package-ecosystem: "npm"
+    directory: "/mau-arkiv"
+    schedule:
+      interval: "weekly"
+    target-branch: "release-2.02"
