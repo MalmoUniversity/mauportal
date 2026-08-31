@@ -35,7 +35,7 @@
     "@mau-arkiv/shared": "file:../shared"
   },
   "devDependencies": {
-    "@angular/build": "^21.2.0",
+    "@angular/build": "^22.1.6",
     "@angular/cli": "^21.2.0",
     "@angular/compiler-cli": "^21.2.0",
     "@types/jasmine": "~5.1.0",
