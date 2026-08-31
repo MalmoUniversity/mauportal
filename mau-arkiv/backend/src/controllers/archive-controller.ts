@@ -16,41 +16,45 @@ export class ArchiveController extends BaseController {
     }
 
     async getFile(req: Request, res: Response): Promise<void> {
-        const uid = req.params.uid;
-        const uri = req.params.uri;
-        
-        logger.info('Archive file request received', { 
-            uid, 
-            uri,
-            user: this.currentUser?.email 
+    const uidParam = req.params.uid;
+    const uriParam = req.params.uri;
+
+logger.info('Archive file request received', { 
+    uid: uidParam, 
+    uri: uriParam,
+    user: this.currentUser?.email 
+});
+
+let uid!: string;
+let uri!: string;
+
+try {
+    if (!uidParam || !uriParam || Array.isArray(uidParam)) {
+        logger.warn('Missing or invalid required parameters', { uid: uidParam, uri: uriParam });
+        res.status(400).json({ 
+            error: 'Bad Request', 
+            message: 'Both uid and uri parameters are required and must be single values' 
         });
+        return;
+    }
+
+    uid = uidParam;
+    uri = Array.isArray(uriParam) ? uriParam.join('/') : uriParam;
+   
+        // Decode URI in case it's URL encoded
+        const decodedUri = decodeURIComponent(uri);
         
-        try {
-            // Validate parameters
-            if (!uid || !uri) {
-                logger.warn('Missing required parameters', { uid, uri });
-                res.status(400).json({ 
-                    error: 'Bad Request', 
-                    message: 'Both uid and uri parameters are required' 
-                });
-                return;
-            }
-
-            // Decode URI in case it's URL encoded
-            const decodedUri = decodeURIComponent(uri);
-            
-            const basePath = config.get<string>('archive.path');
-
-            // get the item from NavigationManager
-            const item = this.getItem(uid, res);
-            if (!item) {
-                logger.warn('Navigation item not found', { uid });
-                res.status(404).json({ 
-                    error: 'Not Found', 
-                    message: 'Navigation item not found' 
-                });
-                return;
-            }
+        const basePath = config.get<string>('archive.path');
+        // get the item from NavigationManager
+        const item = this.getItem(uid, res);
+        if (!item) {
+            logger.warn('Navigation item not found', { uid });
+            res.status(404).json({ 
+                error: 'Not Found', 
+                message: 'Navigation item not found' 
+            });
+            return;
+        }
 
             const archivePath = config.get<string>('archive.path');
             const assumedRoot = config.get<string>('archive.assumedRoot');
