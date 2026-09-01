@@ -79,21 +79,24 @@ export class SearchController extends BaseController {
             logger.info('Connection pool created successfully');
             const request = pool.request();
             let effectiveOrderBy = orderBy;
-            if (!effectiveOrderBy && form.orderBy && form.orderBy.options) {
-                effectiveOrderBy = form.orderBy.options[form.orderBy.defaultOption || 0]?.value;
+            if (form.orderBy && form.orderBy.options && form.orderBy.options.length > 0) {
+                const allowedOrderByValues = form.orderBy.options.map((o: any) => o.value);
+                if (!effectiveOrderBy || !allowedOrderByValues.includes(effectiveOrderBy)) {
+                    effectiveOrderBy = form.orderBy.options[form.orderBy.defaultOption || 0]?.value;
+                }
             }
 
-            const effectivePage = page || 1;
-            const effectivePageSize = pageSize ||
-                (form.database.paging && form.database.paging.pageSize) || 10;
+            const effectivePage = Number.isInteger(Number(page)) && Number(page) > 0 ? Number(page) : 1;
+            const configuredPageSize = (form.database.paging && form.database.paging.pageSize) || 10;
+            const effectivePageSize = Number.isInteger(Number(pageSize)) && Number(pageSize) > 0 ? Number(pageSize) : configuredPageSize;
             let sqlQuery = form.database.statement;
             logger.debug('Original SQL query', { sqlQuery });
             
-            sqlQuery = sqlQuery.replace(/\{0\}/g, effectiveOrderBy);
-            sqlQuery = sqlQuery.replace(/\{1\}/g, effectivePage);
-            sqlQuery = sqlQuery.replace(/\{2\}/g, effectivePageSize);   
+            sqlQuery = sqlQuery.replace(/\{0\}/g, `${effectiveOrderBy || ''}`);
+            sqlQuery = sqlQuery.replace(/\{1\}/g, `${effectivePage}`);
+            sqlQuery = sqlQuery.replace(/\{2\}/g, `${effectivePageSize}`);   
             
-            sqlQuery = this.applyParameters(params, sqlQuery); 
+            sqlQuery = this.applyParameters(request, params, sqlQuery); 
 
             logger.debug('Processed SQL query', { sqlQuery });
            
@@ -101,7 +104,7 @@ export class SearchController extends BaseController {
             const result = await request.query(sqlQuery);
             logger.info('Query result recordset length', { length: result.recordset.length });
             let countQuery = form.database.countStatement;
-            countQuery = this.applyParameters(params, countQuery);
+            countQuery = this.applyParameters(request, params, countQuery);
             logger.debug('Executing count query', { countQuery });
             const countResult = await request.query(countQuery);
             let totalCount = 0;
@@ -194,12 +197,21 @@ export class SearchController extends BaseController {
         return form;
     }
 
-    private applyParameters(params: any, sqlQuery: any) {
-        if ((!params || params.length > 0)) {
+    private applyParameters(request: any, params: any, sqlQuery: any) {
+        if (Array.isArray(params) && params.length > 0) {
             const numberedParameters = sqlQuery.includes('@v1');
             for (let i = 1; i <= params.length; i++) {
-                const paramName = numberedParameters ? `@v${i}` : `@${params[i - 1].name}`;
-                sqlQuery = sqlQuery.replace(`SET ${paramName} = ?;`, `SET ${paramName} = '${params[i - 1].value || ''}';`);
+                const rawName = numberedParameters ? `v${i}` : `${params[i - 1].name || ''}`;
+                const safeName = rawName.replace(/[^a-zA-Z0-9_]/g, '');
+                if (!safeName) {
+                    continue;
+                }
+
+                const paramNameWithAt = `@${safeName}`;
+                const paramValue = params[i - 1].value ?? '';
+
+                sqlQuery = sqlQuery.replace(`SET ${paramNameWithAt} = ?;`, `SET ${paramNameWithAt} = ${paramNameWithAt};`);
+                request.input(safeName, paramValue);
             }
         }
         return sqlQuery;
