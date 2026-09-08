@@ -225,7 +225,10 @@ export class SearchController extends BaseController {
     private applyParameters(request: sql.Request, params: any, sqlQuery: string) {
         if (Array.isArray(params) && params.length > 0) {
             const numberedParameters = sqlQuery.includes('@v1');
-            for (let i = 1; i <= params.length; i++) {
+
+            const safeParamLength = Math.min(params.length, 100); // Limit to 100 parameters to prevent excessive replacements
+            
+            for (let i = 1; i <= safeParamLength; i++) {
                 const rawName = numberedParameters ? `__param_${i}` : `${params[i - 1].name || ''}`;
                 const safeName = rawName.replace(/[^a-zA-Z0-9_]/g, '');
                 if (!safeName) {
@@ -235,7 +238,6 @@ export class SearchController extends BaseController {
                 const paramNameWithAt = `@${safeName}`;
                 const paramValue = params[i - 1].value || '';
                 sqlQuery = sqlQuery.replace("?", paramNameWithAt);
-                // sqlQuery = sqlQuery.replace(`SET ${paramNameWithAt} = ?;`, `SET ${paramNameWithAt} = '${paramValue}';`);
                 request.input(safeName, paramValue);
             }
         }
