@@ -62,19 +62,21 @@ export class SearchController extends BaseController {
                 });
                 return;
             }
-            logger.info('Creating SQL connection pool...');
-            const dbConfig = config.get<any[]>('database').find((c: any) => c.name === form.database.connection)?.config;
-            
-            if (!dbConfig) {
-                logger.error('Database configuration for connection not found', { connection: form.database.connection });
-                res.status(500).json({
-                    error: 'Configuration error',
-                    message: `Database configuration for connection '${form.database.connection}' is missing`
-                });
-                return;
-            }
-            logger.debug('Database configuration used for connection', { dbConfig });
+		    logger.info('Creating SQL connection pool...');
+			const rawDbConfig = config.get<any[]>('database').find((c: any) => c.name === form.database.connection)?.config;
 
+			if (!rawDbConfig) {
+    			logger.error('Database configuration for connection not found', { connection: form.database.connection });
+    			res.status(500).json({
+        			error: 'Configuration error',
+        			message: `Database configuration for connection '${form.database.connection}' is missing`
+    			});
+    			return;
+			}
+
+			const dbConfig = { ...rawDbConfig };
+			logger.debug('Database configuration used for connection', { dbConfig });
+		
             pool = await sql.connect(dbConfig);
             logger.info('Connection pool created successfully');
             const request = pool.request();
