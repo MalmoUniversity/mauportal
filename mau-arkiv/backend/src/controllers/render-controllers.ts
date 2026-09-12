@@ -20,29 +20,29 @@ export class RenderController extends BaseController {
     }
 
     async renderFile(req: Request, res: Response): Promise<void> {
-    const uidParam = req.params.uid;
-    const uriParam = req.params.uri;
+        const uidParam = req.params.uid;
+        const uriParam = req.params.uri;
 
-    let uid!: string;
-    let uri!: string;
+        let uid!: string;
+        let uri!: string;
 
-    try {
-        if (!uidParam || !uriParam || Array.isArray(uidParam)) {
-            res.status(400).json({ error: 'Bad Request', message: 'Both uid and uri are required' });
-            return;
-        }
+        try {
+            if (!uidParam || !uriParam || Array.isArray(uidParam)) {
+                res.status(400).json({ error: 'Bad Request', message: 'Both uid and uri are required' });
+                return;
+            }
 
-        uid = uidParam;
-        uri = Array.isArray(uriParam) ? uriParam.join('/') : uriParam;
+            uid = uidParam;
+            uri = Array.isArray(uriParam) ? uriParam.join('/') : uriParam;
 
-        const decodedUri = decodeURIComponent(uri);
-        const basePath     = config.get<string>('archive.path');
-        const assumedRoot  = config.get<string>('archive.assumedRoot');
-        // Resolve the navigation item — same as ArchiveController
-        const item = this.getItem(uid, res);
-        if (!item) return;
-        const archiveRoot = item.rootUri.replace(assumedRoot, basePath);
-        const xmlPath     = path.join(archiveRoot, decodedUri);
+            const decodedUri = decodeURIComponent(uri);
+            const basePath = config.get<string>('archive.path');
+            const assumedRoot = config.get<string>('archive.assumedRoot');
+            // Resolve the navigation item — same as ArchiveController
+            const item = this.getItem(uid, res);
+            if (!item) return;
+            const archiveRoot = item.rootUri.replace(assumedRoot, basePath);
+            const xmlPath = path.join(archiveRoot, decodedUri);
 
             // Security: must stay within the archive base path
             if (!xmlPath.startsWith(path.resolve(basePath))) {
@@ -59,7 +59,7 @@ export class RenderController extends BaseController {
 
             // Parse <?xml-stylesheet href="..."> from the XML
             const xmlContent = fs.readFileSync(xmlPath, 'utf-8');
-            const xslHref    = this.extractStylesheetHref(xmlContent);
+            const xslHref = this.extractStylesheetHref(xmlContent);
 
             if (!xslHref) {
                 logger.warn('No xml-stylesheet PI found', { xmlPath });
@@ -88,9 +88,10 @@ export class RenderController extends BaseController {
 
             // Inject <base> so relative assets (CSS, images) resolve correctly
             // via the existing static /archive/:uid/ route
-            const xmlDir    = path.dirname(decodedUri);
-            const baseHref  = `/archive/${uid}/${xmlDir}/`;
-            const html      = stdout.replace('<head>', `<head>\n  <base href="${baseHref}">`);
+            const xmlDir = path.dirname(decodedUri);
+            const baseHref = `/archive/${uid}/${xmlDir}/`;
+            const escapedBaseHref = this.escapeHtmlAttr(baseHref);
+            const html = stdout.replace('<head>', `<head>\n  <base href="${escapedBaseHref}">`);
 
             res.setHeader('Content-Type', 'text/html; charset=utf-8');
             res.send(html);
@@ -114,6 +115,20 @@ export class RenderController extends BaseController {
     private extractStylesheetHref(xmlContent: string): string | null {
         const match = xmlContent.match(/<\?xml-stylesheet[^?]*href="([^"]+)"/);
         return match ? match[1] : null;
+    }
+
+    // Escape characters that would break HTML attributes or allow injection
+    private escapeHtmlAttr(value: string): string {
+        return value.replace(/[&<>"']/g, (c) => {
+            switch (c) {
+                case '&': return '&amp;';
+                case '<': return '&lt;';
+                case '>': return '&gt;';
+                case '"': return '&quot;';
+                case "'": return '&#39;';
+                default: return c;
+            }
+        });
     }
 
     private getItem(uid: string, res: Response): NavigationItem | undefined {
