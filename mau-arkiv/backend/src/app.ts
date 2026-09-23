@@ -2,6 +2,7 @@ import 'reflect-metadata'; // Must be first import for TSyringe
 import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import session from 'express-session';
+import csrf from 'csurf';
 import { setRoutes } from './routes/index';
 import navigationManager from './models/navigation/navigation-manager';
 import cors from 'cors';
@@ -78,8 +79,32 @@ app.use(cors({
     origin: 'http://localhost:4200', // Frontend URL, development only
     credentials: true, // CRITICAL: Allow credentials
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token']
 }));
+
+// CSRF Protection middleware - uses session-based tokens (not cookie-based)
+const csrfProtection = csrf({ cookie: false });
+
+// Apply CSRF protection to all routes
+// For auth routes, we catch and ignore CSRF errors since external IdP won't have tokens
+// For other routes, CSRF validation must pass
+app.use((req: Request, res: Response, next: any) => {
+    csrfProtection(req, res, (err: any) => {
+        // If CSRF validation fails on auth routes, ignore the error and continue
+        if (err && req.path.startsWith('/api/auth/')) {
+            logger.debug('CSRF validation skipped for auth route', { path: req.path });
+            return next();
+        }
+        // For other routes or no error, continue normally (error will be caught by error handler)
+        if (err) return next(err);
+        next();
+    });
+});
+
+// CSRF token endpoint - frontend calls this to get a fresh token
+app.get('/api/csrf-token', (req: Request, res: Response) => {
+    res.json({ token: req.csrfToken() });
+});
 
 logger.info('Middleware configured successfully');
 
