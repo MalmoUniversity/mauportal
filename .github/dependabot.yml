@@ -10,4 +10,4 @@ updates:
     directory: "/mau-arkiv"
     schedule:
       interval: "weekly"
-    target-branch: "release-2.03"
+    target-branch: "release-2.04"
