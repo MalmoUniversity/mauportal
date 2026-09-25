@@ -23,7 +23,7 @@
     "@types/saml2-js": "^3.0.4",
     "axios": "^1.18.0",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
+    "dotenv": "^18.0.2",
     "express": "^5.2.1",
     "express-session": "^1.18.2",
     "hjson": "^3.2.2",
