@@ -187,16 +187,17 @@ export class SearchController extends BaseController {
         return effectivePageSize;
     }
 
-    private getEffectiveOrderBy(orderBy: string | undefined, form: any) : string {
-        let effectiveOrderBy = orderBy;
-        if (form.orderBy && form.orderBy.options && form.orderBy.options.length > 0) {
-            const allowedOrderByValues = form.orderBy.options.map((o: any) => o.value);
-            if (!effectiveOrderBy || !allowedOrderByValues.includes(effectiveOrderBy)) {
-                effectiveOrderBy = form.orderBy.options[form.orderBy.defaultOption || 0]?.value;
-            }
-        }
-        return effectiveOrderBy || '';
+	private getEffectiveOrderBy(orderBy: string | undefined, form: any) : string {
+    const options = form.orderBy?.options;
+    if (!Array.isArray(options) || options.length === 0) {
+        return '';                              // no allowlist configured, ignore client value
     }
+    const allowed = options.map((o: any) => o.value);
+    if (orderBy && allowed.includes(orderBy)) {
+        return orderBy;
+    }
+    return options[form.orderBy.defaultOption || 0]?.value || '';
+}
 
     private applyPagingAndOrder(sqlQuery: string, effectiveOrderBy: string, effectivePage: number, effectivePageSize: number) {
         sqlQuery = sqlQuery.replace(/\{0\}/g, `${effectiveOrderBy || ''}`);
@@ -227,21 +228,14 @@ export class SearchController extends BaseController {
 
     private applyParameters(request: sql.Request, params: any, sqlQuery: string) {
         if (Array.isArray(params) && params.length > 0) {
-            const numberedParameters = sqlQuery.includes('@v1');
 
             const safeParamLength = Math.min(params.length, 100); // Limit to 100 parameters to prevent excessive replacements
             
             for (let i = 1; i <= safeParamLength; i++) {
-                const rawName = numberedParameters ? `__param_${i}` : `${params[i - 1].name || ''}`;
-                const safeName = rawName.replace(/[^a-zA-Z0-9_]/g, '');
-                if (!safeName) {
-                    continue;
-                }
-
-                const paramNameWithAt = `@${safeName}`;
-                const paramValue = params[i - 1].value || '';
-                sqlQuery = sqlQuery.replace("?", paramNameWithAt);
-                request.input(safeName, paramValue);
+				const safeName = `__param_${i}`; 
+        		const paramValue = params[i - 1].value || '';
+				sqlQuery = sqlQuery.replace("?", `@${safeName}`);
+				request.input(safeName, paramValue);
             }
         }
         return sqlQuery;
