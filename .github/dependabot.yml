@@ -10,4 +10,3 @@ updates:
     directory: "/mau-arkiv"
     schedule:
       interval: "weekly"
-    target-branch: "main"
