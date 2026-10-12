@@ -2,11 +2,10 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/mau-arkiv"
+    target-branch: "release-candidate"
     schedule:
       interval: "weekly"
-    target-branch: "main"
-
-  - package-ecosystem: "npm"
-    directory: "/mau-arkiv"
-    schedule:
-      interval: "weekly"
+    open-pull-requests-limit: 20
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]
