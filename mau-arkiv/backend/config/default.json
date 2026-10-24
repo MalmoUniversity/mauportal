@@ -31,5 +31,10 @@
     "audit-log": {
         "enabled": true,
         "db": "Arkiv_app"
+    },
+    "rate-limit": {
+        "enabled": true,
+        "window-ms": 60000,
+        "max-requests": 100
     }
 }
