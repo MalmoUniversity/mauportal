@@ -3,6 +3,7 @@ import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import session from 'express-session';
 import csrf from 'csurf';
+import rateLimit from 'express-rate-limit';
 import { setRoutes } from './routes/index';
 import navigationManager from './models/navigation/navigation-manager';
 import cors from 'cors';
@@ -64,6 +65,39 @@ app.use(createLoggingMiddleware({
     maxBodyLength: parseInt(process.env.LOG_HTTP_MAX_BODY_LENGTH || '1000'),
     skipPaths: ['/favicon.ico', '/robots.txt', '/assets']
 }));
+
+const rateLimitEnabled = config.get<boolean>('rate-limit.enabled');
+const rateLimitWindowMs = config.get<number>('rate-limit.window-ms');
+const rateLimitMaxRequests = config.get<number>('rate-limit.max-requests');
+const rateLimitSkippedPathPrefixes = ['/health', '/favicon.ico', '/robots.txt', '/assets'];
+
+const apiRateLimiter = rateLimit({
+    windowMs: rateLimitWindowMs,
+    limit: rateLimitMaxRequests,
+    standardHeaders: true,
+    legacyHeaders: false,
+    skip: (req: Request) => {
+        if (!rateLimitEnabled) {
+            return true;
+        }
+
+        return rateLimitSkippedPathPrefixes.some((pathPrefix) => req.path.startsWith(pathPrefix));
+    },
+    handler: (req: Request, res: Response) => {
+        logger.warn('Rate limit exceeded', {
+            ip: req.ip,
+            method: req.method,
+            url: req.originalUrl || req.url
+        });
+
+        res.status(429).json({
+            error: 'Too Many Requests',
+            message: 'Rate limit exceeded. Please retry later.'
+        });
+    }
+});
+
+app.use('/api', apiRateLimiter);
 
 // Add audit log middleware (logs user requests to database)
 app.use(createAuditLogMiddleware({
@@ -193,4 +227,3 @@ process.on('uncaughtException', (error: Error) => {
 process.on('unhandledRejection', (reason: any, promise: Promise<any>) => {
     logger.error('Unhandled Rejection', { reason, promise });
 });
-
