@@ -39,7 +39,7 @@
     "winston": "^3.18.3",
     "winston-daily-rotate-file": "^5.0.0",
     "xml2js": "^0.6.2",
-    "config": "^4.1.1"
+    "config": "^5.0.1"
   },
   "devDependencies": {
     "@types/config": "^3.3.5",
