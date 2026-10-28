@@ -16,8 +16,7 @@
         "build": "npm run clean-build && npm run build --prefix shared && npm run build --prefix backend",
         "package": "npm ci && npm run build && npm run clean-modules && npm ci && npm run copy-builds", 
 
-        "clean-symlinks": "rm -f node_modules/@mau-arkiv/shared && rm -f node_modules/backend && rm -f node_modules/frontend",
-        "copy-builds":"npm run clean-symlinks && cp -r shared/dist/ node_modules/@mau-arkiv/shared && cp -r backend/dist ./dist && cp -r node_modules ./dist/ && cp -r backend/config ./dist/"
+        "copy-builds":"rm -rf dist && cp -r backend/dist ./dist && cp -r backend/node_modules ./dist/node_modules && rm -rf dist/node_modules/@mau-arkiv/shared && mkdir -p dist/node_modules/@mau-arkiv/shared && cp shared/package.json dist/node_modules/@mau-arkiv/shared/package.json && cp -r shared/dist dist/node_modules/@mau-arkiv/shared/dist && cp -r backend/config ./dist/"
 
     },
     "overrides": {
