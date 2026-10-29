@@ -76,6 +76,22 @@ npm run test:logging
 
 For detailed logging documentation, see [LOGGING.md](./LOGGING.md).
 
+## Rate limiting
+
+API routes are protected with `express-rate-limit`:
+
+- Scope: all `/api/*` routes
+- Default limit: `100` requests
+- Default window: `60` seconds
+- Excluded paths: `/health`, `/favicon.ico`, `/robots.txt`, `/assets`
+- Response when exceeded: HTTP `429` with a JSON error response
+
+Configuration keys (in `config/default.json`, override in `config/local.json` as needed):
+
+- `rate-limit.enabled` (`true` by default)
+- `rate-limit.window-ms` (defaults to `60000`)
+- `rate-limit.max-requests` (defaults to `100`)
+
 ## Dependencies
 
 Here a short description of any module used and its purpose is given:
@@ -86,6 +102,7 @@ Here a short description of any module used and its purpose is given:
 - **dotenv**: environment variables support
 - **cors**: cross-origin resource sharing
 - **express**: web application framework
+- **express-rate-limit**: API request rate limiting middleware
 
 ## License
 
