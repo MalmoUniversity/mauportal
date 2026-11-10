@@ -2,9 +2,9 @@
 
 This project is a full-stack application that consists of an Express backend, an Angular frontend and a shared package. These three parts are organized into separate directories for better maintainability and clarity.
 
-Also in the pre-build directory a "mau-arkiv" application directory is provided. Move the entire directory to /opt/mau, and follow relevant parts in the manual.
+Also in the pre-build directory a "mau-arkiv" application directory is provided. Move the content of the desired version directory to /opt/mau, and follow relevant parts in the manual. Don't forget to copy the template "config" directory.
 
-Currently two releases are published - version 1.0.3 that handles XSL transformation in frontend and version 2.0.0 that handles XSL transformation in backend with xsltproc (that needs to be installed on your system). In the configuration file 'local.json' you can set the value 'xslTransform' whether to handle XSL transformation in back- or frontend.
+Currently two releases are published - version 1.0.3 that handles XSL transformation in frontend and version 2.0.0 or later that handles XSL transformation in backend with xsltproc (that needs to be installed on your system). In the configuration file 'local.json' you can set the value 'xslTransform' whether to handle XSL transformation in back- or frontend.
 
 ## Project Structure
 
