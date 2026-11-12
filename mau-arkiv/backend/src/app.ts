@@ -16,6 +16,7 @@ import db from './core/utils/database';
 import c from 'config';
 
 const app = express();
+app.set('trust proxy', 1); // one proxy hop (Nginx)
 const PORT = process.env.PORT || 3000;
 
 navigationManager.load(
@@ -53,6 +54,14 @@ app.use(session({
         domain: process.env.NODE_ENV === 'production' ? 'yourdomain.com' : undefined
     }
 }));
+
+// Rate limiting for frontend routes
+const frontendRouteLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 200,                 // limit each IP to 200 requests per window
+    standardHeaders: true,
+    legacyHeaders: false,
+});
 
 // DI middleware - must come after session middleware
 app.use(requestContextMiddleware);
@@ -156,12 +165,12 @@ if (xslTransformConfig) {
 
 
 // Serve the Angular frontend for all other routes.This is needed for runnig via pm2.
-app.get('/', (req: Request, res: Response) => {
+app.get('/', frontendRouteLimiter, (req: Request, res: Response) => {
     res.sendFile('index.html', { root: 'public' });
 });
 
 // Serve index.html for all routes starting with 'content' to support client-side routing
-app.get('/content/*splat', (req: Request, res: Response) => {
+app.get('/content/*splat', frontendRouteLimiter, (req: Request, res: Response) => {
     res.sendFile('index.html', { root: 'public' });
 });
 
