@@ -132,11 +132,12 @@ export class AuthController {
                 attribute: profile.attributes
             });
 
-            // Redirect to the original URL or default to home
-            const redirectUrl = returnUrl || '/?authenticated=true';
+            // Redirect to the original URL (local paths only) or default to home
+            const redirectUrl = safeRedirectPath(returnUrl);
             logger.info('Redirecting after authentication', { redirectUrl });
             res.redirect(redirectUrl);
-        } catch (error) {
+
+            } catch (error) {
             logger.error('Error in SAML callback', { error: error instanceof Error ? error.message : error });
             res.redirect('/login?error=callback_failed');
         }
