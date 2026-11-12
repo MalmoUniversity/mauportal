@@ -51,11 +51,11 @@ export class AuthController {
     login = async (req: Request, res: Response) => {
         try {
             await this.ensureInitialized();
-            
-            // Get the returnUrl from query parameter
-            const returnUrl = req.query.returnUrl as string;
+
+            // Get the returnUrl from query parameter; only local paths are accepted
+            const returnUrl = safeRedirectPath(req.query.returnUrl, '');
             logger.info('Initiating SAML login', { returnUrl, sessionID: req.sessionID });
-            
+                             
             // Pass returnUrl as RelayState to SAML
             const loginUrl = await this.strategy.getLoginUrl(returnUrl || undefined);
             logger.info('Redirecting to SAML IdP for authentication', { loginUrl });
