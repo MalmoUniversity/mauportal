@@ -55,6 +55,29 @@ app.use(session({
     }
 }));
 
+// CSRF protection
+const csrfProtection = csrf(); // session-based: the secret is stored in req.session
+
+// Routes that must NOT require a CSRF token (the IdP posts to these from another site)
+const csrfExempt = ['/api/auth/saml/callback']; // adjust to your real callback path
+
+app.use((req, res, next) => {
+    if (csrfExempt.includes(req.path)) return next();
+    csrfProtection(req, res, next);
+});
+
+// Hand the token to the Angular frontend
+app.use((req, res, next) => {
+    if (typeof req.csrfToken === 'function') {
+        res.cookie('XSRF-TOKEN', req.csrfToken(), {
+            httpOnly: false, // Angular must be able to read it
+            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production',
+        });
+    }
+    next();
+});
+
 // Rate limiting for frontend routes
 const frontendRouteLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
