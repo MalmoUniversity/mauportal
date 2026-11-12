@@ -4,6 +4,31 @@ import { SamlStrategy } from '../core/config/saml-config';
 import logger from '../core/utils/logger';
 import { User } from '../core/types/user.types';
 
+const DEFAULT_REDIRECT = '/?authenticated=true';
+
+/**
+ * Only allow same-site relative paths such as "/content/foo?x=1".
+ * Anything else (absolute URLs, "//host", backslash tricks) falls back to the default.
+ */
+function safeRedirectPath(target: unknown, fallback = DEFAULT_REDIRECT): string {
+    if (typeof target !== 'string' || target.length === 0 || target.length > 2048) return fallback;
+
+    // Must start with exactly one slash. "//evil.com" is protocol-relative, and browsers
+    // treat "/\evil.com" like "//evil.com", so backslashes are rejected too.
+    if (!target.startsWith('/') || target.startsWith('//') || target.includes('\\')) return fallback;
+
+    // No control characters (tabs and newlines can be used to hide the host)
+    if (/[\x00-\x1F\x7F]/.test(target)) return fallback;
+
+    // Final check: it must still resolve to the same origin
+    try {
+        if (new URL(target, 'http://localhost').origin !== 'http://localhost') return fallback;
+    } catch {
+        return fallback;
+    }
+    return target;
+}
+
 export class AuthController {
     private strategy: SamlStrategy;
     private strategyInitialized: Promise<void>;
