@@ -55,27 +55,17 @@ app.use(session({
     }
 }));
 
-// CSRF protection
-const csrfProtection = csrf(); // session-based: the secret is stored in req.session
+// CSRF protection (session-based). Must come directly after the session
+// middleware so everything registered afterwards is covered.
+const csrfProtection = csrf({ cookie: false });
 
-// Routes that must NOT require a CSRF token (the IdP posts to these from another site)
-const csrfExempt = ['/api/auth/saml/callback']; // adjust to your real callback path
+// The external IdP posts the SAML response here and cannot have a token;
+// this route is protected by the signed assertion instead.
+const csrfExempt = ['/api/auth/saml/callback'];
 
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: any) => {
     if (csrfExempt.includes(req.path)) return next();
     csrfProtection(req, res, next);
-});
-
-// Hand the token to the Angular frontend
-app.use((req, res, next) => {
-    if (typeof req.csrfToken === 'function') {
-        res.cookie('XSRF-TOKEN', req.csrfToken(), {
-            httpOnly: false, // Angular must be able to read it
-            sameSite: 'lax',
-            secure: process.env.NODE_ENV === 'production',
-        });
-    }
-    next();
 });
 
 // Rate limiting for frontend routes
@@ -148,24 +138,6 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token']
 }));
 
-// CSRF Protection middleware - uses session-based tokens (not cookie-based)
-const csrfProtection = csrf({ cookie: false });
-
-// Apply CSRF protection to all routes
-// For auth routes, we catch and ignore CSRF errors since external IdP won't have tokens
-// For other routes, CSRF validation must pass
-app.use((req: Request, res: Response, next: any) => {
-    csrfProtection(req, res, (err: any) => {
-        // If CSRF validation fails on auth routes, ignore the error and continue
-        if (err && req.path.startsWith('/api/auth/')) {
-            logger.debug('CSRF validation skipped for auth route', { path: req.path });
-            return next();
-        }
-        // For other routes or no error, continue normally (error will be caught by error handler)
-        if (err) return next(err);
-        next();
-    });
-});
 
 // CSRF token endpoint - frontend calls this to get a fresh token
 app.get('/api/csrf-token', (req: Request, res: Response) => {
