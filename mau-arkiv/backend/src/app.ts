@@ -14,6 +14,7 @@ import { requestContextMiddleware } from './middleware/di-middleware';
 import { createAuditLogMiddleware } from './middleware/audit-log-middleware';
 import db from './core/utils/database';
 import c from 'config';
+import { canAccess } from './core/access';
 
 const app = express();
 app.set('trust proxy', 1); // one proxy hop (Nginx)
