@@ -103,7 +103,9 @@ export class AuthController {
                     firstName: profile.attributes?.givenName?.[0],
                     lastName: profile.attributes?.sn?.[0],
                     attributes: profile.attributes,
-                    roles: profile.attributes?.['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || []
+		    roles: [].concat(
+    			profile.attributes?.['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ?? []
+		    ),
                 };
                 
                 req.session.user = user;
