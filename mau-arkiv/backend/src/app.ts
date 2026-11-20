@@ -77,6 +77,17 @@ const frontendRouteLimiter = rateLimit({
     legacyHeaders: false,
 });
 
+// Used by Nginx auth_request for /content/*
+app.get('/auth/check', (req: Request, res: Response) => {
+  const user = req.session?.user;
+  if (!user) return res.sendStatus(401);
+
+  const uri = req.get('X-Original-URI') ?? '';
+  if (!canAccess(user.roles ?? [], uri)) return res.sendStatus(403);
+
+  res.sendStatus(200);
+});
+
 // DI middleware - must come after session middleware
 app.use(requestContextMiddleware);
 
